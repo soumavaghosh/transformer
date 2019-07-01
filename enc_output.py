@@ -26,6 +26,6 @@ class encoder_output(nn.Module):
 
         enc_out = self.w2(enc_flat)
         enc_out = self.w3(enc_out)
-        enc_out = F.softmax(self.w4(enc_out))
+        enc_out = F.softmax(self.w4(enc_out), dim=0)
 
         return enc_out
