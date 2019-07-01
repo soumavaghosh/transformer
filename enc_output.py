@@ -6,6 +6,12 @@ import torch.nn.functional as F
 
 class encoder_output(nn.Module):
 
+    """
+        This class converts the final sequence of encoder outputs to the final desired state.
+        In this method it is converted to a final probability state by initially reducing the dimension of each sequence unit
+        and then flatenning them
+    """
+
     def __init__(self, max_len, embedding_size=512):
         super(encoder_output, self).__init__()
         self.embedding_size = embedding_size

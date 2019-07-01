@@ -5,16 +5,16 @@ import torch.nn.functional as F
 
 
 class encoder_unit(nn.Module):
+    """
+        Creates a each unit of the encoder. Consists of the self attention block and the fully connected NN.
+        Takes in the embedded input and outputs the encoded output
+    """
 
-    def __init__(self, vocab_size, max_length, embedding_size=512, attn_head=8):
+    def __init__(self, embedding_size=512, attn_head=8):
         super(encoder_unit, self).__init__()
 
         self.embedding_size = embedding_size
         self.attn_head = attn_head
-        self.vocab_size = vocab_size
-
-        self.word_emb = nn.Embedding(vocab_size, embedding_size)
-        self.pos_emb = nn.Embedding(max_length, embedding_size)
 
         self.q_list = nn.ModuleList()
         self.k_list = nn.ModuleList()
@@ -34,9 +34,8 @@ class encoder_unit(nn.Module):
 
         self.l_norm2 = nn.LayerNorm(embedding_size)
 
-    def forward(self, x_word_emb, x_pos_emb):
+    def forward(self, emb):
 
-        emb = x_pos_emb + x_word_emb
         q_tmp = []
         k_tmp = []
         v_tmp = []
