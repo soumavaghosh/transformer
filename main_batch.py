@@ -55,7 +55,7 @@ embed.train()
 encoder.train()
 enc_conv.train()
 
-opt = optim.SGD(params, lr = 0.01)
+opt = optim.SGD(params, lr=0.005)
 
 for i in range(10):
 
