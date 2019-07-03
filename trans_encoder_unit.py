@@ -45,14 +45,14 @@ class encoder_unit(nn.Module):
             q_tmp.append(self.q_list[i](emb))
             k_tmp.append(self.k_list[i](emb))
             v_tmp.append(self.v_list[i](emb))
-            z = torch.mm(q_tmp[-1], torch.transpose(k_tmp[-1], 0, 1))
-            weight = F.softmax(z, dim = 0)
-            z = torch.mm(weight, v_tmp[-1])/np.sqrt(self.embedding_size / self.attn_head)
+            z = torch.bmm(q_tmp[-1], torch.transpose(k_tmp[-1], 1, 2))
+            weight = F.softmax(z, dim=2)
+            z = torch.bmm(weight, v_tmp[-1])/np.sqrt(self.embedding_size / self.attn_head)
             z_tmp.append(z)
 
         z = z_tmp[0]
         for i in z_tmp[1:]:
-            z = torch.cat((z, i), 1)
+            z = torch.cat((z, i), 2)
 
         z = self.w0(z)
 

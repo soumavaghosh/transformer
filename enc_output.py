@@ -26,9 +26,9 @@ class encoder_output(nn.Module):
         enc_out = self.w0(enc_out)
         enc_out = self.w1(enc_out)
 
-        enc_flat = enc_out[0]
-        for i in range(1,len(enc_out)):
-            enc_flat = torch.cat((enc_flat, enc_out[i]), 0)
+        enc_flat = enc_out.view(enc_out.size()[0],-1)
+        # for i in range(1,len(enc_out)):
+        #     enc_flat = torch.cat((enc_flat, enc_out[i]), 0)
 
         enc_out = self.w2(enc_flat)
         enc_out = self.w3(enc_out)

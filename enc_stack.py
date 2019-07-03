@@ -25,4 +25,4 @@ class trans_encoder(nn.Module):
         for i in range(self.unit):
             emb = self.stk[i](emb)
 
-        return(emb)
+        return emb
