@@ -68,6 +68,8 @@ for _ in range(batch):
     pos_data.append(pos)
 
 # ----------------------------------------------------------
+losses = []
+
 epoch = 20
 for _ in range(epoch):
     opt.zero_grad()
@@ -85,6 +87,8 @@ for _ in range(epoch):
 
     loss = loss_f(prob, lab)
     loss.backward()
+    losses.append(loss)
+
     embed.word_emb.weight.grad[0].zero_()
     opt.step()
     print(loss)
