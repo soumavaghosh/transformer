@@ -3,7 +3,7 @@ from trans_wrd_embed import trans_word_emb
 from enc_output import encoder_output
 from torch import nn
 import torch.optim as optim
-from random import randint
+from random import randint, shuffle
 import torch
 from enc_stack import trans_encoder
 
@@ -14,7 +14,6 @@ data = [x.decode("utf-8") for x in data]
 txt = [x.split('\t')[0].strip().lower() for x in data]
 txt = [word_tokenize(x) for x in txt]
 label = [int(x.split('\t')[1].strip().replace('\n', '')) for x in data]
-lab = torch.tensor(label, dtype=torch.long, requires_grad=False)
 
 words = []
 max_len = 0
@@ -40,6 +39,10 @@ def padding(x):
 txt_label = [[word_to_id[i]for i in x] for x in txt]
 
 txt_label = [padding(x) for x in txt_label]
+
+final_data = [(txt_label[i], label[i]) for i in range(len(label))]
+
+print('done')
 
 # ----------------------------------------------------------
 
@@ -69,12 +72,18 @@ epoch = 20
 for _ in range(epoch):
     opt.zero_grad()
 
-    ind = randint(0, len(txt_label)-batch-1)
-    emb = embed(txt_label[ind : ind+batch], pos_data)
+    shuffle(final_data)
+    train_data = final_data[:batch]
+
+    txt_data = [x[0] for x in train_data]
+    lab_data = [x[1] for x in train_data]
+    lab = torch.tensor(lab_data, dtype=torch.long, requires_grad=False)
+
+    emb = embed(txt_data, pos_data)
     out = encoder(emb)
     prob = enc_conv(out)
 
-    loss = loss_f(prob, lab[ind : ind+batch])
+    loss = loss_f(prob, lab)
     loss.backward()
     embed.word_emb.weight.grad[0].zero_()
     opt.step()
